@@ -37,26 +37,30 @@ public class UnsortedArrayPriorityQueue <T> implements PriorityQueue<T>
         {
             throw new QueueUnderflowException();
         }else{
-            return ((PriorityItem<T>) storage[0]).getItem();
+            int indexToReturn = 0;
+            int highestPriority = 0;
+            for(int i = 0; i < tailIndex; i++)
+            {
+                if(((PriorityItem<T>) storage[i - 1]).getPriority() < highestPriority)
+                {
+                    highestPriority = ((PriorityItem<T>) storage[i - 1]).getPriority();
+                    indexToReturn = i;
+                }
+            }
+            return ((PriorityItem<T>) storage[indexToReturn]).getItem();
         }
     }
     
     @Override
     public void add(T item, int priority) throws QueueOverflowException
-    {
+    {         
         tailIndex++;
         if(tailIndex >= capacity)
         {
             tailIndex--;
             throw new QueueOverflowException();
         }else{
-            int i = tailIndex;
-            while(i > 0 && ((PriorityItem<T>) storage[i - 1]).getPriority() < priority)
-            {
-                storage[i] = storage[i - 1];
-                i--;
-            }
-            storage[i] = new PriorityItem<>(item, priority);
+            storage[tailIndex] = new PriorityItem<>(item, priority);
         }
     }
     
@@ -67,9 +71,20 @@ public class UnsortedArrayPriorityQueue <T> implements PriorityQueue<T>
         {
             throw new QueueUnderflowException();
         }else{
+            int indexToRemove = 0;
+            int highestPriority = 0;
             for(int i = 0; i < tailIndex; i++)
             {
-                storage[i] = storage[i + 1];
+                if(((PriorityItem<T>) storage[i - 1]).getPriority() < highestPriority)
+                {
+                    highestPriority = ((PriorityItem<T>) storage[i - 1]).getPriority();
+                    indexToRemove = i;
+                }
+            }          
+            
+            for(int j = indexToRemove; j < tailIndex; j++)
+            {
+                storage[j] = storage[j + 1];
             }
             tailIndex--;
         }
