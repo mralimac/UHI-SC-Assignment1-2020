@@ -5,6 +5,8 @@
  */
 package queuemanager;
 
+import java.util.LinkedList;
+
 /**
  *
  * @author mralimac
@@ -13,7 +15,7 @@ public class SortedLinkedPriorityQueue <T> implements PriorityQueue<T>
 {
     
     //The array that'll contain the data
-    private final Object[] storage;
+    private final LinkedList<T> storage;
     
     //How large the array is
     private final int capacity;
@@ -25,7 +27,7 @@ public class SortedLinkedPriorityQueue <T> implements PriorityQueue<T>
     
     public SortedLinkedPriorityQueue(int size)
     {
-       storage = new Object[size];
+       storage = new LinkedList<>();
        capacity = size;
        tailIndex = -1;
     }
@@ -37,7 +39,7 @@ public class SortedLinkedPriorityQueue <T> implements PriorityQueue<T>
         {
             throw new QueueUnderflowException();
         }else{
-            return ((PriorityItem<T>) storage[0]).getItem();
+            return storage.getFirst();
         }
     }
     
@@ -50,13 +52,11 @@ public class SortedLinkedPriorityQueue <T> implements PriorityQueue<T>
             tailIndex--;
             throw new QueueOverflowException();
         }else{
-            int i = tailIndex;
-            while(i > 0 && ((PriorityItem<T>) storage[i - 1]).getPriority() < priority)
-            {
-                storage[i] = storage[i - 1];
-                i--;
-            }
-            storage[i] = new PriorityItem<>(item, priority);
+           int i = tailIndex;
+           
+            
+            
+           storage.add(item);
         }
     }
     
