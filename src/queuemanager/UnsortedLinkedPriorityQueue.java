@@ -46,8 +46,9 @@ public class UnsortedLinkedPriorityQueue <T> implements PriorityQueue<T>
     @Override
     public void add(T item, int priority) throws QueueOverflowException
     {
-
+        tailIndex++;
         storage.add(new PriorityItem<>(item, priority));
+        
     }
     
     @Override
@@ -57,11 +58,9 @@ public class UnsortedLinkedPriorityQueue <T> implements PriorityQueue<T>
         {
             throw new QueueUnderflowException();
         }else{
-            for(int i = 0; i < tailIndex; i++)
-            {
-                storage.remove(i);
-            }
-            tailIndex--;
+           
+           storage.remove(storage.getFirst()); 
+            
         }
     }
     
