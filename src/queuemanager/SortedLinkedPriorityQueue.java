@@ -11,25 +11,18 @@ import java.util.LinkedList;
  *
  * @author mralimac
  */
-public class SortedLinkedPriorityQueue <T> implements PriorityQueue<T>
+public class SortedLinkedPriorityQueue<T> implements PriorityQueue<T>
 {
     
     //The array that'll contain the data
     private final LinkedList storage;
-    
-    //How large the array is
-    //private final int capacity;
-    
-    //Current index of the array
-    private int tailIndex;
-    
-    
+    private ListNode<T> head;
     
     public SortedLinkedPriorityQueue(int size)
     {
+       head = null;
        storage = new LinkedList<>();
-       //capacity = size;
-       tailIndex = -1;
+       
     }
     
     @Override
@@ -38,68 +31,69 @@ public class SortedLinkedPriorityQueue <T> implements PriorityQueue<T>
         if(isEmpty())
         {
             throw new QueueUnderflowException();
-        }else{
-            return ((PriorityItem<T>) storage.getFirst()).getItem();
         }
+        return head.getItem();
     }
     
     @Override
-    public void add(T item, int priority) throws QueueOverflowException
+    public void add(T item, int priority)
     {
-
-        int i = tailIndex;
-        
-        if(storage.size() < 1)
-        {
-            storage.add(new PriorityItem<>(item, priority));
-        }
-        
-        int previousValue = 0;
-
-        for(int j = 0; j < storage.size(); j++ )
-        {
-            if(priority > ((PriorityItem<T>) storage.get(j)).getPriority() && priority < previousValue)
-             {
-                tailIndex++;
-                storage.add(j, new PriorityItem<>(item, priority));
-             }else{
-                previousValue = ((PriorityItem<T>) storage.get(j)).getPriority();
+        if(isEmpty()){
+            head = new ListNode<>(item, priority, head);
+        }else{
+            ListNode<T> previousNode = head;
+            
+            for(ListNode<T> node = head; node != null; node = node.getNext())
+            { 
+                if(node.getPriority() < priority)
+                {
+                   previousNode.setNext(new ListNode<>(item, priority, head));
+                }
+                previousNode = node;
             }
-        }  
+        }
+    }
+    
+    public int size()
+    {
+        ListNode<T> node = head;
+        int result = 0;
+        
+        while(node != null)
+        {
+            result = result + 1;
+            node = node.getNext();
+        }
+        return result;
     }
     
     @Override
     public void remove() throws QueueUnderflowException 
     {
-        if(isEmpty())
+       if(isEmpty())
         {
-            throw new QueueUnderflowException();
-        }else{
-            for(int i = 0; i < tailIndex; i++)
-            {
-                storage.remove(i);
-            }
-            tailIndex--;
+          throw new QueueUnderflowException();
         }
+       head = head.getNext();
     }
     
     @Override
     public boolean isEmpty()
     {
-        return storage.isEmpty();
+        return head == null;
     }
     
     @Override
     public String toString()
     {
         String result = "[";
-        for(int i = 0; i <= tailIndex; i++)
+        for(ListNode<T> node = head; node != null; node = node.getNext())
         {
-            if(i > 0)
+            if(node != head)
             {
                 result = result + ", ";
             }
-            result = result + storage.get(i);
+            result = result + node.getItem();
         }
         result = result + "]";
         return result;

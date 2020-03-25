@@ -16,20 +16,13 @@ public class UnsortedLinkedPriorityQueue <T> implements PriorityQueue<T>
     
     //The array that'll contain the data
     private final LinkedList storage;
-    
-    //How large the array is
-    //private final int capacity;
-    
-    //Current index of the array
-    private int tailIndex;
-    
-    
+    private ListNode<T> head;
     
     public UnsortedLinkedPriorityQueue(int size)
     {
+       head = null;
        storage = new LinkedList<>();
-       //capacity = size;
-       tailIndex = -1;
+       
     }
     
     @Override
@@ -38,49 +31,54 @@ public class UnsortedLinkedPriorityQueue <T> implements PriorityQueue<T>
         if(isEmpty())
         {
             throw new QueueUnderflowException();
-        }else{
-            return ((PriorityItem<T>) storage.getFirst()).getItem();
         }
+        return head.getItem();
     }
     
     @Override
-    public void add(T item, int priority) throws QueueOverflowException
+    public void add(T item, int priority)
     {
-        tailIndex++;
-        storage.add(new PriorityItem<>(item, priority));
-        
+        head = new ListNode<>(item, priority, head);
     }
     
     @Override
     public void remove() throws QueueUnderflowException 
     {
-        if(isEmpty())
+       if(isEmpty())
         {
-            throw new QueueUnderflowException();
-        }else{
-           
-           storage.remove(storage.getFirst()); 
-            
+          throw new QueueUnderflowException();
         }
+       
+       int currentHighestPriority = 0;
+       
+       for(ListNode<T> node = head; node != null; node = node.getNext())
+        { 
+            if(node.getPriority() > currentHighestPriority)
+            {
+               currentHighestPriority = node.getPriority();
+            }
+        }
+       
+       
     }
     
     @Override
     public boolean isEmpty()
     {
-        return storage.isEmpty();
+        return head == null;
     }
     
     @Override
     public String toString()
     {
         String result = "[";
-        for(int i = 0; i <= tailIndex; i++)
+        for(ListNode<T> node = head; node != null; node = node.getNext())
         {
-            if(i > 0)
+            if(node != head)
             {
                 result = result + ", ";
             }
-            result = result + storage.get(i);
+            result = result + node.getItem();
         }
         result = result + "]";
         return result;
