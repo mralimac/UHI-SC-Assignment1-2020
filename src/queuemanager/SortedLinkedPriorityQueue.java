@@ -15,10 +15,10 @@ public class SortedLinkedPriorityQueue <T> implements PriorityQueue<T>
 {
     
     //The array that'll contain the data
-    private final LinkedList<T> storage;
+    private final LinkedList storage;
     
     //How large the array is
-    private final int capacity;
+    //private final int capacity;
     
     //Current index of the array
     private int tailIndex;
@@ -28,7 +28,7 @@ public class SortedLinkedPriorityQueue <T> implements PriorityQueue<T>
     public SortedLinkedPriorityQueue(int size)
     {
        storage = new LinkedList<>();
-       capacity = size;
+       //capacity = size;
        tailIndex = -1;
     }
     
@@ -39,25 +39,33 @@ public class SortedLinkedPriorityQueue <T> implements PriorityQueue<T>
         {
             throw new QueueUnderflowException();
         }else{
-            return storage.getFirst();
+            return ((PriorityItem<T>) storage.getFirst()).getItem();
         }
     }
     
     @Override
     public void add(T item, int priority) throws QueueOverflowException
     {
-        tailIndex++;
-        if(tailIndex >= capacity)
+
+        int i = tailIndex;
+        
+        if(storage.size() < 1)
         {
-            tailIndex--;
-            throw new QueueOverflowException();
-        }else{
-           int i = tailIndex;
-           
-            
-            
-           storage.add(item);
+            storage.add(new PriorityItem<>(item, priority));
         }
+        
+        int previousValue = 0;
+
+        for(int j = 0; j < storage.size(); j++ )
+        {
+            if(priority > ((PriorityItem<T>) storage.get(j)).getPriority() && priority < previousValue)
+             {
+                tailIndex++;
+                storage.add(j, new PriorityItem<>(item, priority));
+             }else{
+                previousValue = ((PriorityItem<T>) storage.get(j)).getPriority();
+            }
+        }  
     }
     
     @Override
@@ -69,7 +77,7 @@ public class SortedLinkedPriorityQueue <T> implements PriorityQueue<T>
         }else{
             for(int i = 0; i < tailIndex; i++)
             {
-                storage[i] = storage[i + 1];
+                storage.remove(i);
             }
             tailIndex--;
         }
@@ -78,7 +86,7 @@ public class SortedLinkedPriorityQueue <T> implements PriorityQueue<T>
     @Override
     public boolean isEmpty()
     {
-        return tailIndex < 0;
+        return storage.isEmpty();
     }
     
     @Override
@@ -91,7 +99,7 @@ public class SortedLinkedPriorityQueue <T> implements PriorityQueue<T>
             {
                 result = result + ", ";
             }
-            result = result + storage[i];
+            result = result + storage.get(i);
         }
         result = result + "]";
         return result;

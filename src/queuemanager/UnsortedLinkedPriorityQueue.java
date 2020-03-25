@@ -5,7 +5,7 @@
  */
 package queuemanager;
 
-
+import java.util.LinkedList;
 
 /**
  *
@@ -13,37 +13,79 @@ package queuemanager;
  */
 public class UnsortedLinkedPriorityQueue <T> implements PriorityQueue<T>
 {
+    
+    //The array that'll contain the data
+    private final LinkedList storage;
+    
+    //How large the array is
+    //private final int capacity;
+    
+    //Current index of the array
+    private int tailIndex;
+    
+    
+    
     public UnsortedLinkedPriorityQueue(int size)
     {
-       
+       storage = new LinkedList<>();
+       //capacity = size;
+       tailIndex = -1;
     }
     
+    @Override
     public T head() throws QueueUnderflowException
     {
-        return null;
+        if(isEmpty())
+        {
+            throw new QueueUnderflowException();
+        }else{
+            return ((PriorityItem<T>) storage.getFirst()).getItem();
+        }
     }
     
+    @Override
     public void add(T item, int priority) throws QueueOverflowException
     {
-      
+
+        storage.add(new PriorityItem<>(item, priority));
     }
     
     @Override
     public void remove() throws QueueUnderflowException 
     {
-      
+        if(isEmpty())
+        {
+            throw new QueueUnderflowException();
+        }else{
+            for(int i = 0; i < tailIndex; i++)
+            {
+                storage.remove(i);
+            }
+            tailIndex--;
+        }
     }
     
     @Override
     public boolean isEmpty()
     {
-       return false;
+        return storage.isEmpty();
     }
     
     @Override
     public String toString()
     {
-       return null;
+        String result = "[";
+        for(int i = 0; i <= tailIndex; i++)
+        {
+            if(i > 0)
+            {
+                result = result + ", ";
+            }
+            result = result + storage.get(i);
+        }
+        result = result + "]";
+        return result;
     }
     
 }
+
