@@ -5,8 +5,6 @@
  */
 package queuemanager;
 
-import java.util.LinkedList;
-
 /**
  *
  * @author mralimac
@@ -15,13 +13,12 @@ public class UnsortedLinkedPriorityQueue <T> implements PriorityQueue<T>
 {
     
     //The array that'll contain the data
-    private final LinkedList storage;
+    
     private ListNode<T> head;
     
     public UnsortedLinkedPriorityQueue(int size)
     {
        head = null;
-       storage = new LinkedList<>();
        
     }
     
@@ -51,16 +48,23 @@ public class UnsortedLinkedPriorityQueue <T> implements PriorityQueue<T>
        
        int currentHighestPriority = 0;
        
+       ListNode<T> savedNode = null;
+       
        for(ListNode<T> node = head; node != null; node = node.getNext())
         { 
-            if(node.getPriority() > currentHighestPriority)
+            if(node.getPriority() >= currentHighestPriority)
             {
                currentHighestPriority = node.getPriority();
+               savedNode = node;
             }
         }
+       savedNode.setNext(savedNode.getNext().getNext());
        
+       //Override the previous node with the next node around the removed object
        
+       //previousNode.setNext(node.getNext());
     }
+    
     
     @Override
     public boolean isEmpty()

@@ -4,25 +4,17 @@
  * and open the template in the editor.
  */
 package queuemanager;
-
-import java.util.LinkedList;
-
 /**
  *
  * @author mralimac
  */
 public class SortedLinkedPriorityQueue<T> implements PriorityQueue<T>
 {
-    
-    //The array that'll contain the data
-    private final LinkedList storage;
     private ListNode<T> head;
     
     public SortedLinkedPriorityQueue(int size)
     {
        head = null;
-       storage = new LinkedList<>();
-       
     }
     
     @Override
@@ -45,7 +37,7 @@ public class SortedLinkedPriorityQueue<T> implements PriorityQueue<T>
             
             for(ListNode<T> node = head; node != null; node = node.getNext())
             { 
-                if(node.getPriority() < priority)
+                if(priority > node.getPriority())
                 {
                    previousNode.setNext(new ListNode<>(item, priority, head));
                 }
@@ -53,20 +45,7 @@ public class SortedLinkedPriorityQueue<T> implements PriorityQueue<T>
             }
         }
     }
-    
-    public int size()
-    {
-        ListNode<T> node = head;
-        int result = 0;
-        
-        while(node != null)
-        {
-            result = result + 1;
-            node = node.getNext();
-        }
-        return result;
-    }
-    
+
     @Override
     public void remove() throws QueueUnderflowException 
     {
