@@ -11,34 +11,66 @@ package queuemanager;
  */
 public class HeapPriorityQueue <T> implements PriorityQueue<T>
 {
-    
-    //The array that'll contain the data
     private final Object[] storage;
-    
-    //How large the array is
     private final int capacity;
-    
-    //Current index of the array
     private int tailIndex;
-    
-    
     
     public HeapPriorityQueue(int size)
     {
+       //Heap is an array
+       //Position 1 is the root
+       //Postition 2 and 3 are the root's children
+       //Position 4 and 5 are 2's childrens
        storage = new Object[size];
        capacity = size;
        tailIndex = -1;
+       
     }
     
     @Override
     public T head() throws QueueUnderflowException
     {
-        if(isEmpty())
-        {
-            throw new QueueUnderflowException();
-        }else{
-            return ((PriorityItem<T>) storage[0]).getItem();
+        return ((PriorityItem<T>) storage[0]).getItem();
+    }
+    
+    public int getLeftChildIndex(int parentIndex)
+    {
+        return (parentIndex*2);
+    }
+    
+    public int getRightChildIndex(int parentIndex)
+    {
+        return (parentIndex*2) + 1;
+    }
+    
+    public int getParentIndex(int childIndex)
+    {
+        return (int) Math.floor(childIndex/2);
+    }
+    
+    public int swap(int source, int target)
+    {
+        Object tempObject = storage[target];
+        storage[target] = storage[source];
+        storage[source] = tempObject;
+        System.out.println(toString());
+        return target;
+    }
+    
+    public boolean isSwapNeeded(int childIndex)
+    {
+        if(((PriorityItem<T>) storage[getParentIndex(childIndex)]).getPriority() > ((PriorityItem<T>) storage[childIndex]).getPriority()){
+            return false;
         }
+        if(((PriorityItem<T>) storage[childIndex]) == null){
+            return false;
+        }
+        
+        if(((PriorityItem<T>) storage[getParentIndex(childIndex)]) == null){
+            return false;
+        }
+        return true;
+        
     }
     
     @Override
@@ -47,38 +79,35 @@ public class HeapPriorityQueue <T> implements PriorityQueue<T>
         tailIndex++;
         if(tailIndex >= capacity)
         {
-            tailIndex--;
+            tailIndex = tailIndex - 1;
             throw new QueueOverflowException();
-        }else{
-            int i = tailIndex;
-            while(i > 0 && ((PriorityItem<T>) storage[i - 1]).getPriority() < priority)
-            {
-                storage[i] = storage[i - 1];
-                i--;
+        }
+        else
+        {
+             //Add to end of array and keep checking the parents until cycle is achived
+            storage[tailIndex] = new PriorityItem(item, priority);
+            int childIndex = tailIndex;
+
+            while(isSwapNeeded(childIndex)){
+                //get parent index, then child index. and swap them
+                
+                childIndex = swap(childIndex, getParentIndex(childIndex));
             }
-            storage[i] = new PriorityItem<>(item, priority);
         }
     }
     
     @Override
     public void remove() throws QueueUnderflowException 
     {
-        if(isEmpty())
-        {
-            throw new QueueUnderflowException();
-        }else{
-            for(int i = 0; i < tailIndex; i++)
-            {
-                storage[i] = storage[i + 1];
-            }
-            tailIndex--;
-        }
+       //Remove the number at index zero then cycle through the heap using the methods until heap is achieved
+       //Need to find the lowest value
+        
     }
     
     @Override
     public boolean isEmpty()
-    {
-        return tailIndex < 0;
+    { 
+        return storage[1] == null;
     }
     
     @Override
@@ -89,9 +118,9 @@ public class HeapPriorityQueue <T> implements PriorityQueue<T>
         {
             if(i > 0)
             {
-                result = result + ", ";
+                result = result +" , ";
             }
-            result = result + storage[i];
+            result = result + i + storage[i];
         }
         result = result + "]";
         return result;
