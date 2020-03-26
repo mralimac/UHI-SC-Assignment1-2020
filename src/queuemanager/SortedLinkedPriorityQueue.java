@@ -19,13 +19,31 @@ public class SortedLinkedPriorityQueue<T> implements PriorityQueue<T>
     
     @Override
     public T head() throws QueueUnderflowException
-    {
+    {   
+        
         if(isEmpty())
         {
             throw new QueueUnderflowException();
         }
-        return head.getItem();
+        
+        ListNode<T> headNode = null;
+        int highestPriority = 0;
+        
+        for(ListNode<T> node = head; node != null; node = node.getNext())
+        {
+            if(node.getPriority() > highestPriority)
+            {
+                highestPriority = node.getPriority();
+                headNode = node;
+            }
+        }
+        
+        return headNode.getItem();
     }
+    
+    
+    
+    
     
     @Override
     public void add(T item, int priority)
@@ -73,7 +91,7 @@ public class SortedLinkedPriorityQueue<T> implements PriorityQueue<T>
             {
                 result = result + ", ";
             }
-            result = result + node.getItem();
+            result = result + "(" +  node.getItem() + ", "+ node.getPriority() +")";
         }
         result = result + "]";
         return result;

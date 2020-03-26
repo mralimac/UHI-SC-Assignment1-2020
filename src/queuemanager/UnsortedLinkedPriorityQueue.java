@@ -58,7 +58,7 @@ public class UnsortedLinkedPriorityQueue <T> implements PriorityQueue<T>
                savedNode = node;
             }
         }
-       savedNode.setNext(savedNode.getNext());
+       savedNode.setNext(savedNode);
        
        //Override the previous node with the next node around the removed object
        
@@ -82,7 +82,7 @@ public class UnsortedLinkedPriorityQueue <T> implements PriorityQueue<T>
             {
                 result = result + ", ";
             }
-            result = result + node.getItem();
+            result = result + "(" +  node.getItem() + ", "+ node.getPriority() +")";
         }
         result = result + "]";
         return result;
