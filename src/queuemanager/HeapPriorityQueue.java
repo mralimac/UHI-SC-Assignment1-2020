@@ -43,34 +43,23 @@ public class HeapPriorityQueue <T> implements PriorityQueue<T>
         return (parentIndex*2) + 1;
     }
     
+    public boolean isChildBigger(int parentIndex)
+    {
+        if(((PriorityItem<T>) storage[getLeftChildIndex(parentIndex)]).getPriority() > ((PriorityItem<T>) storage[parentIndex]).getPriority())
+        {
+            return true;
+        }
+        
+        if(((PriorityItem<T>) storage[getRightChildIndex(parentIndex)]).getPriority() > ((PriorityItem<T>) storage[parentIndex]).getPriority())
+        {
+            return true;
+        }
+        return false;
+    }
+    
     public int getParentIndex(int childIndex)
     {
         return (int) Math.floor(childIndex/2);
-    }
-    
-    public int swap(int source, int target)
-    {
-        Object tempObject = storage[target];
-        storage[target] = storage[source];
-        storage[source] = tempObject;
-        System.out.println(toString());
-        return target;
-    }
-    
-    public boolean isSwapNeeded(int childIndex)
-    {
-        if(((PriorityItem<T>) storage[getParentIndex(childIndex)]).getPriority() > ((PriorityItem<T>) storage[childIndex]).getPriority()){
-            return false;
-        }
-        if(((PriorityItem<T>) storage[childIndex]) == null){
-            return false;
-        }
-        
-        if(((PriorityItem<T>) storage[getParentIndex(childIndex)]) == null){
-            return false;
-        }
-        return true;
-        
     }
     
     @Override
@@ -87,11 +76,15 @@ public class HeapPriorityQueue <T> implements PriorityQueue<T>
              //Add to end of array and keep checking the parents until cycle is achived
             storage[tailIndex] = new PriorityItem(item, priority);
             int childIndex = tailIndex;
-
-            while(isSwapNeeded(childIndex)){
+            
+            while(((PriorityItem<T>) storage[getParentIndex(childIndex)]).getPriority() < ((PriorityItem<T>) storage[childIndex]).getPriority()){
                 //get parent index, then child index. and swap them
                 
-                childIndex = swap(childIndex, getParentIndex(childIndex));
+                Object tempObject = storage[getParentIndex(childIndex)];
+                storage[getParentIndex(childIndex)] = storage[childIndex];
+                storage[childIndex] = tempObject;
+                childIndex = getParentIndex(childIndex);
+                
             }
         }
     }
@@ -99,9 +92,30 @@ public class HeapPriorityQueue <T> implements PriorityQueue<T>
     @Override
     public void remove() throws QueueUnderflowException 
     {
+        storage[1] = storage[tailIndex];
+        
+        int objectIndex = 1;
+        
+        while(isChildBigger(objectIndex)){
+            
+            if(((PriorityItem<T>) storage[getLeftChildIndex(objectIndex)]).getPriority() > ((PriorityItem<T>) storage[objectIndex]).getPriority()){
+                
+                Object tempObject = storage[getLeftChildIndex(objectIndex)];
+                storage[getLeftChildIndex(objectIndex)] = storage[objectIndex];
+                storage[objectIndex] = tempObject;
+                
+            }else if(((PriorityItem<T>) storage[getRightChildIndex(objectIndex)]).getPriority() > ((PriorityItem<T>) storage[objectIndex]).getPriority()){
+                
+                Object tempObject = storage[getRightChildIndex(objectIndex)];
+                storage[getLeftChildIndex(objectIndex)] = storage[objectIndex];
+                storage[objectIndex] = tempObject;
+            }
+            objectIndex = getParentIndex(objectIndex);
+        }
+        
        //Remove the number at index zero then cycle through the heap using the methods until heap is achieved
        //Need to find the lowest value
-        
+        tailIndex--;
     }
     
     @Override
@@ -118,9 +132,9 @@ public class HeapPriorityQueue <T> implements PriorityQueue<T>
         {
             if(i > 0)
             {
-                result = result +" , ";
+                result = result +", ";
             }
-            result = result + i + storage[i];
+            result = result + storage[i];
         }
         result = result + "]";
         return result;

@@ -84,7 +84,7 @@ public class UnsortedArrayPriorityQueue <T> implements PriorityQueue<T>
             
             for(int j = indexToRemove; j < tailIndex; j++)
             {
-                storage[j] = storage[j + 1];
+                storage[j + 1] = storage[j];
             }
             tailIndex--;
         }

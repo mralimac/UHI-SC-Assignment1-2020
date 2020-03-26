@@ -52,13 +52,13 @@ public class UnsortedLinkedPriorityQueue <T> implements PriorityQueue<T>
        
        for(ListNode<T> node = head; node != null; node = node.getNext())
         { 
-            if(node.getPriority() >= currentHighestPriority)
+            if(node.getPriority() > currentHighestPriority)
             {
                currentHighestPriority = node.getPriority();
                savedNode = node;
             }
         }
-       savedNode.setNext(savedNode);
+       savedNode = savedNode.getNext();
        
        //Override the previous node with the next node around the removed object
        

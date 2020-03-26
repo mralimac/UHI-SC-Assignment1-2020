@@ -72,7 +72,7 @@ public class SortedLinkedPriorityQueueTest {
        
        String actualResult = this.queue.toString();
 
-       String expectedResult = "[(Four, 4)]";        
+       String expectedResult = "[(Five, 5)]";        
        assertEquals(expectedResult, actualResult);
        
     }

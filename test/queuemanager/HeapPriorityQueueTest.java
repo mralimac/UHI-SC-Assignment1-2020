@@ -68,12 +68,14 @@ public class HeapPriorityQueueTest {
     public void testRemove() throws Exception {
        this.queue = new HeapPriorityQueue<Person>(5);
        this.queue.add(new Person("Four"), 4);
-       this.queue.add(new Person("Five"), 5);
+       this.queue.add(new Person("Six"), 6);
+       this.queue.add(new Person("Nine"), 9);
+       this.queue.add(new Person("Three"), 3);
        this.queue.remove();
        
        String actualResult = this.queue.toString();
 
-       String expectedResult = "[(Four, 4)]";        
+       String expectedResult = "[(Nine, 9), (Four, 4), (Three, 3)]";        
        assertEquals(expectedResult, actualResult);
     }
 

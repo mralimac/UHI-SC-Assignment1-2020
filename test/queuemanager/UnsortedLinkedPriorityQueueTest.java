@@ -54,6 +54,7 @@ public class UnsortedLinkedPriorityQueueTest {
     public void testAdd() throws Exception {
         this.queue = new UnsortedLinkedPriorityQueue<Person>(5); 
         this.queue.add(new Person("Four"), 4);
+        this.queue.add(new Person("Five"), 5);
         boolean actualResult = this.queue.isEmpty();
         
         boolean expectedResult = false;        
@@ -65,7 +66,7 @@ public class UnsortedLinkedPriorityQueueTest {
      */
     @Test
     public void testRemove() throws Exception {
-        this.queue = new UnsortedLinkedPriorityQueue<Person>(5);
+       this.queue = new UnsortedLinkedPriorityQueue<Person>(5);
        this.queue.add(new Person("Four"), 4);
        this.queue.add(new Person("Five"), 5);
        this.queue.remove();
@@ -93,8 +94,8 @@ public class UnsortedLinkedPriorityQueueTest {
      * Test of toString method, of class UnsortedLinkedPriorityQueue.
      */
     @Test
-    public void testToString() throws Exception {
-       this.queue = new UnsortedLinkedPriorityQueue<Person>(5); 
+    public void testToString() {
+       this.queue = new UnsortedLinkedPriorityQueue<Person>(5);
        this.queue.add(new Person("Four"), 4);
        this.queue.add(new Person("Five"), 5);
        String actualResult = this.queue.toString();
