@@ -46,23 +46,22 @@ public class UnsortedLinkedPriorityQueue <T> implements PriorityQueue<T>
           throw new QueueUnderflowException();
         }
        
-       int currentHighestPriority = 0;
        
-       ListNode<T> savedNode = null;
+       
+       ListNode<T> savedNode = head;
+       int currentHighestPriority = savedNode.getPriority();
        
        for(ListNode<T> node = head; node != null; node = node.getNext())
         { 
-            if(node.getPriority() > currentHighestPriority)
+            if(node.getPriority() >= currentHighestPriority)
             {
                currentHighestPriority = node.getPriority();
                savedNode = node;
             }
         }
+       
+       
        savedNode = savedNode.getNext();
-       
-       //Override the previous node with the next node around the removed object
-       
-       //previousNode.setNext(node.getNext());
     }
     
     
